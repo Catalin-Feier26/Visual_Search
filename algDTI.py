@@ -175,7 +175,7 @@ def bfs(window, grid, cell_number, start, end):
             while current != start:
                 final_path.append(current)
                 current=path[current]
-            final_path.reverse
+            final_path.reverse()
             return final_path
         for direction in [NORTH,EAST,SOUTH,WEST]:
             next_cell = (x+ direction[0], y+direction[1])
