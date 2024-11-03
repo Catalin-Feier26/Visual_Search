@@ -324,7 +324,7 @@ def startWindow(window):
 
     button_width = 150
     button_height = 50
-    button_x = start_window_x + (start_window_width - button_width) //2
+    button_x = start_window_x + (start_window_width - button_width) // 2
     button_y = start_window_y + (start_window_height - button_height) - 20
 
     font = pygame.font.Font(None, 32)
@@ -332,30 +332,41 @@ def startWindow(window):
     start_text_lines = [
         "WELCOME!",
         "READ THE RULES:",
-        "1. Click on a cell to change its state.",
-        "2. Have one start and one end.",
-        "3. Press ESC and choose an algorithm.",
-        "4. Press S to start!"
+        "Click on a cell to change its state.",
+        "Have one start and one end.",
+        "Press ESC and choose an algorithm.",
+        "Press S to start!"
     ]
 
+    # Load the star image
+    star_image = pygame.image.load("star.png") 
+    star_image = pygame.transform.scale(star_image,(30,30))
+    star_width, star_height = star_image.get_size()
+    
+
     while True:
-        pygame.draw.rect(window,BRAT,(start_window_x,start_window_y,start_window_width,start_window_height))
+        pygame.draw.rect(window, BRAT, (start_window_x, start_window_y, start_window_width, start_window_height))
 
         line_height = 40  # Space between lines
         for i, line in enumerate(start_text_lines):
             rendered_line = font.render(line, True, BLACK)
             line_y = start_window_y + 50 + i * line_height
-            window.blit(rendered_line, (start_window_x + 20, line_y))
+            window.blit(rendered_line, (start_window_x + 30, line_y))
+            
+            if i < len(start_text_lines) and i != 0 and i!= 1:  
+                star_x = start_window_x + 40 - star_width - 10  
+                star_y = line_y + (line_height - star_height) // 2  - 14
+                window.blit(star_image, (star_x, star_y))
 
         mouse_x, mouse_y = pygame.mouse.get_pos()
         button_hover = button_x <= mouse_x <= button_x + button_width and button_y <= mouse_y <= button_y + button_height
         button_color = HIGHLIGHT_COLOR if button_hover else PINK
-        pygame.draw.rect(window,button_color, (button_x, button_y, button_width, button_height))
+        pygame.draw.rect(window, button_color, (button_x, button_y, button_width, button_height))
 
         button_text = font.render("Understood", True, BLACK)
         button_text_rect = button_text.get_rect(center=(button_x + button_width // 2, button_y + button_height // 2))
         window.blit(button_text, button_text_rect)
-        
+
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -364,7 +375,8 @@ def startWindow(window):
                 exit()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if button_hover:
-                    return 
+                    return
+
 # The error window
 def showError(window, errorMessage):
     # Window dimensions
