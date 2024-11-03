@@ -54,13 +54,15 @@ pygame.mixer.music.load('Dress Up Theme from Dress To Impress.mp3')
 pygame.mixer.music.set_volume(0.11)
 pygame.mixer.music.play(-1)
 
+#Function to run a specific song!
 def playSong(songName):
     pygame.mixer.music.load(songName)
     pygame.mixer.music.set_volume(0.15)
     pygame.mixer.music.play(-1)
-
+#Heuristic for the ASTAR algorithm
 def heuristic(node,end):
     return abs(node[0] - end[0]) + abs(node[1] - end[1])
+#A* algorithm
 def astar(window, grid, cell_number, start, end):
     priority_q = [(heuristic(start,end),start)]
     g_cost = {start: 0}
@@ -106,6 +108,7 @@ def astar(window, grid, cell_number, start, end):
                     path[next_cell] = current
     
     return None
+#Uniform Cost search algorithm
 def ucs(window, grid, cell_number, start, end):
     priority_q = [(0,start)]
     visited = set()
@@ -151,6 +154,7 @@ def ucs(window, grid, cell_number, start, end):
                 path[next_cell]=current
         
     return None
+#Breadth first search
 def bfs(window, grid, cell_number, start, end):
     queue = deque([start])
     visited = set([start])
@@ -184,6 +188,7 @@ def bfs(window, grid, cell_number, start, end):
                 visited.add(next_cell)
                 path[next_cell] = current
     return None          
+#Depth first search
 def dfs(window,grid, cell_number, start, end):
     stack = [start]
     visited = set()
@@ -219,6 +224,7 @@ def dfs(window,grid, cell_number, start, end):
                 stack.append(next_cell)
                 path[next_cell] = current
     return None
+#Controller function for the algorithms
 def executeAlgorithm(window, cell_number,grid, selected_algorithm, start_x, start_y, end_x, end_y):
 
     start = (start_x,start_y)
@@ -253,7 +259,7 @@ def executeAlgorithm(window, cell_number,grid, selected_algorithm, start_x, star
                 print("\t({}, {})".format(x, y))
                 print("Goal\nLength: ",length)
 
-    
+#Functions to get the start and endpoints from the GRID    
 def getStart(grid, cell_number):
     for row in range(cell_number):
         for col in range(cell_number):
@@ -267,7 +273,7 @@ def getEnd(grid, cell_number):
                 return (row,col)
     return None
 
-
+#Reading arguments from the command line
 def readArguments():
     if len(sys.argv) > 1:
         cell_number = int(sys.argv[1])
@@ -278,8 +284,10 @@ def readArguments():
     else:
         print("Please provide the number of cells as an argument.")
         sys.exit(1)
+# Grid Creation
 def createGrid(cell_number):
     return [[0 for _ in range(cell_number)] for _ in range(cell_number)]
+#Reset function for the APP
 def resetGrid(grid, cell_number):
     global selected_algorithm, start_count, end_count
     selected_algorithm = 0
@@ -291,6 +299,7 @@ def resetGrid(grid, cell_number):
                 grid[row][col] = BORDER
             else:
                 grid[row][col] = EMPTY
+#The clicking mechanism
 def toggleCell(grid, row, col):
     global start_count, end_count
 
@@ -306,6 +315,7 @@ def toggleCell(grid, row, col):
     elif grid[row][col] == END:
         end_count-=1
         grid[row][col] = EMPTY
+# THe menu PANEL when prpessing ESC
 def showMenu(window, selected_index):
     font = pygame.font.Font(None,36)
     menu_items = ["DFS", "BFS", "UCS", "A*","START"]
@@ -318,6 +328,7 @@ def showMenu(window, selected_index):
         menu_surface.blit(text,(50, 40+index*40))
 
     window.blit(menu_surface,(WIDTH // 2 - 150, HEIGHT // 2 -100))
+#Drawing the grid
 def gridDrawing(window, grid, cell_number):
     cell_width = WIDTH // cell_number
     cell_height = HEIGHT // cell_number
@@ -342,6 +353,7 @@ def gridDrawing(window, grid, cell_number):
                 pygame.draw.rect(window, PINK, rect)
             
             pygame.draw.rect(window, BLACK, rect, 1)  # Draw border
+# The start window
 def startWindow(window):
     WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
 
@@ -393,6 +405,7 @@ def startWindow(window):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if button_hover:
                     return 
+# The error window
 def showError(window, errorMessage):
     # Window dimensions
     WINDOW_WIDTH, WINDOW_HEIGHT = window.get_size()
@@ -434,7 +447,7 @@ def showError(window, errorMessage):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if button_hovered:
                     return 
-
+# The main function
 def main():
     global selected_algorithm, start_count, end_count
     cell_number = readArguments()
@@ -491,6 +504,6 @@ def main():
         if show_menu:
             showMenu(window,sel)
         pygame.display.update()
-
+# Init
 if __name__ == "__main__":
     main()
